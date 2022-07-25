@@ -1,48 +1,335 @@
 <html>
 <script src='https://d3js.org/d3.v5.min.js'></script>
-<style> circle {fill: lightblue; stroke: black;} </style>
-<body onload='init()'>
-<svg width=300 height=300>
-</svg>
+<link rel="stylesheet" type="text/css" href="styles.css">
+<style></style>
+<body>
+<!-- svg canvas-->
+  <<div id="my_dataviz"></div>
 <script>
-async function init() {
-	const data = await d3.csv('https://flunky.github.io/cars2017.csv');
-var x = d3.scaleLog().domain([10, 150]).range([ 0,  200]);
-var y = d3.scaleLog().domain([10, 150]).range([200, 0]);
-var margin = 50;
-d3.select("svg")
-.append("g")
-.attr("transform", "translate("+margin+","+margin+")")
-.selectAll("circle")
-.data(data)
-.enter()
-.append("circle")
-.attr("cx", function (d,i) {return x(d.AverageCityMPG)})
-.attr("cy", function (d,i) {return y(d.AverageHighwayMPG)})
-.attr("r", function(d,i) {return (parseInt(d.EngineCylinders, 10) + 2)})
+var margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width = 800 - margin.left - margin.right,
+    height = 800 - margin.top - margin.bottom;
 
-d3.select("svg").append("g")
-            .attr("transform", "translate("+margin+","+margin+")")
-            .call(d3.axisLeft(y)
-                    .tickValues([10, 20, 50, 100])
-                    .tickFormat(d3.format("~s"))
-                    );
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
 
-d3.select("svg").append("g")
-            .attr("transform", "translate("+margin+","+(200 + margin)+")")
-            .call(d3.axisBottom(x)
-                    .tickValues([10, 20, 50, 100])  
-                    .tickFormat(d3.format("~s"))
-                    );
+const data = [
+  {
+    "Race": "Black",
+    "Year": 2010,
+    "Income": 38433
+  },
+  {
+    "Race": "Asian",
+    "Year": 2010,
+    "Income": 49118
+  },
+  {
+    "Race": "Hispanic",
+    "Year": 2010,
+    "Income": 33530
+  },
+  {
+    "Race": "White",
+    "Year": 2010,
+    "Income": 47932
+  },
+  {
+    "Race": "Black",
+    "Year": 2011,
+    "Income": 38640
+  },
+  {
+    "Race": "Asian",
+    "Year": 2011,
+    "Income": 47153
+  },
+  {
+    "Race": "Hispanic",
+    "Year": 2011,
+    "Income": 33472
+  },
+  {
+    "Race": "White",
+    "Year": 2011,
+    "Income": 46523
+  },
+  {
+    "Race": "Black",
+    "Year": 2012,
+    "Income": 38272
+  },
+  {
+    "Race": "Asian",
+    "Year": 2012,
+    "Income": 51489
+  },
+  {
+    "Race": "Hispanic",
+    "Year": 2012,
+    "Income": 32104
+  },
+  {
+    "Race": "White",
+    "Year": 2012,
+    "Income": 46209
+  },
+  {
+    "Race": "Black",
+    "Year": 2013,
+    "Income": 37941
+  },
+  {
+    "Race": "Asian",
+    "Year": 2013,
+    "Income": 47119
+  },
+  {
+    "Race": "Hispanic",
+    "Year": 2013,
+    "Income": 33622
+  },
+  {
+    "Race": "White",
+    "Year": 2013,
+    "Income": 46076
+  },
+  {
+    "Race": "Black",
+    "Year": 2013,
+    "Income": 36121
+  },
+  {
+    "Race": "Asian",
+    "Year": 2013,
+    "Income": 50463
+  },
+  {
+    "Race": "Hispanic",
+    "Year": 2013,
+    "Income": 34128
+  },
+  {
+    "Race": "White",
+    "Year": 2013,
+    "Income": 45895
+  },
+  {
+    "Race": "Black",
+    "Year": 2014,
+    "Income": 36700
+  },
+  {
+    "Race": "Asian",
+    "Year": 2014,
+    "Income": 50711
+  },
+  {
+    "Race": "Hispanic",
+    "Year": 2014,
+    "Income": 33154
+  },
+  {
+    "Race": "White",
+    "Year": 2014,
+    "Income": 45772
+  },
+  {
+    "Race": "Black",
+    "Year": 2015,
+    "Income": 39555
+  },
+  {
+    "Race": "Asian",
+    "Year": 2015,
+    "Income": 52958
+  },
+  {
+    "Race": "Hispanic",
+    "Year": 2015,
+    "Income": 33989
+  },
+  {
+    "Race": "White",
+    "Year": 2015,
+    "Income": 47050
+  },
+  {
+    "Race": "Black",
+    "Year": 2016,
+    "Income": 39077
+  },
+  {
+    "Race": "Asian",
+    "Year": 2016,
+    "Income": 54597
+  },
+  {
+    "Race": "Hispanic",
+    "Year": 2016,
+    "Income": 34002
+  },
+  {
+    "Race": "White",
+    "Year": 2016,
+    "Income": 49339
+  },
+  {
+    "Race": "Black",
+    "Year": 2017,
+    "Income": 39075
+  },
+  {
+    "Race": "Asian",
+    "Year": 2017,
+    "Income": 54873
+  },
+  {
+    "Race": "Hispanic",
+    "Year": 2017,
+    "Income": 33953
+  },
+  {
+    "Race": "White",
+    "Year": 2017,
+    "Income": 50143
+  },
+  {
+    "Race": "Black",
+    "Year": 2018,
+    "Income": 39209
+  },
+  {
+    "Race": "Asian",
+    "Year": 2018,
+    "Income": 57282
+  },
+  {
+    "Race": "Hispanic",
+    "Year": 2018,
+    "Income": 34574
+  },
+  {
+    "Race": "White",
+    "Year": 2018,
+    "Income": 49882
+  },
+  {
+    "Race": "Black",
+    "Year": 2019,
+    "Income": 41611
+  },
+  {
+    "Race": "Asian",
+    "Year": 2019,
+    "Income": 57516
+  },
+  {
+    "Race": "Hispanic",
+    "Year": 2019,
+    "Income": 36561
+  },
+  {
+    "Race": "White",
+    "Year": 2019,
+    "Income": 51964
+  },
+  {
+    "Race": "Black",
+    "Year": 2020,
+    "Income": 43209
+  },
+  {
+    "Race": "Asian",
+    "Year": 2020,
+    "Income": 68442
+  },
+  {
+    "Race": "Hispanic",
+    "Year": 2020,
+    "Income": 38718
+  },
+  {
+    "Race": "White",
+    "Year": 2020,
+    "Income": 53731
+  }
+];
+	let parseDate = d3.timeParse("%Y")
+	data.forEach(function (d) {
+  		d.Year = parseDate(d.Year);
+	});
+    // Add X axis --> it is a date format
+    var x = d3.scaleTime()
+      .domain(d3.extent(data, function(d) { return d.Year; }))
+      .range([ 0, width ]);
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
 
+    // Add Y axis
+    var y = d3.scaleLinear()
+      .domain([0, d3.max(data, function(d) { return +d.Income; })])
+      .range([ height, 0 ]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
 
+    const white = data.filter(function(d) {return d.Race === "White"})
+    const hispanic = data.filter(function(d) {return d.Race === "Hispanic"})
+    const asian = data.filter(function(d) {return d.Race === "Asian"})
+    const black = data.filter(function(d) {return d.Race === "Black"})
+    // Add the line
+    svg.append("path")
+      .datum(white)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.Year) })
+        .y(function(d) { return y(d.Income)})
+       )
 
+    svg.append("path")
+      .datum(hispanic)
+      .attr("fill", "none")
+      .attr("stroke", "orange")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.Year) })
+        .y(function(d) { return y(d.Income)})
+       )
 
+     svg.append("path")
+      .datum(asian)
+      .attr("fill", "none")
+      .attr("stroke", "red")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.Year) })
+        .y(function(d) { return y(d.Income)})
+       )
 
-
-
-
-}
+      svg.append("path")
+      .datum(black)
+      .attr("fill", "none")
+      .attr("stroke", "green")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.Year) })
+        .y(function(d) { return y(d.Income)})
+       )
 </script>
+
 </body>
+
+
+
+
+
 </html>
