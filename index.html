@@ -1,10 +1,21 @@
 <html>
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <link rel="stylesheet" type="text/css" href="styles.css">
-<style></style>
+<style>
+	#tooltip {
+		opacity: 0;
+		position: absolute;
+		text-align: center;
+		width: 150px;
+		height: 50px;
+		background: white;
+		border: 0px;
+	}
+</style>
 <body>
 <!-- svg canvas-->
-  <<div id="my_dataviz"></div>
+  <div id="my_dataviz"></div>
+  
 <input type="checkbox" id="white" name="white" value="White" checked onChange={window.location.reload();}>
 <label for="white" style="color:steelblue">White</label><br>
 <input type="checkbox" id="hispanic" name="hispanic" value="Hispanic" checked onChange={window.location.reload();}>
@@ -13,6 +24,8 @@
 <label for="asian" style="color:red">Asian</label><br> 
 <input type="checkbox" id="black" name="black" value="Black" checked onChange={window.location.reload();}>
 <label for="black" style="color:green">Black</label><br>
+
+<div id="tooltip"></div>
 <script>
 var margin = {top: 10, right: 30, bottom: 30, left: 60},
     width = 800 - margin.left - margin.right,
@@ -293,17 +306,26 @@ const data = [
     const hispanic = data.filter(function(d) {return d.Race === "Hispanic"})
     const asian = data.filter(function(d) {return d.Race === "Asian"})
     const black = data.filter(function(d) {return d.Race === "Black"})
+
+    var tooltip = d3.select("#tooltip");
     // Add the line
     if (document.getElementById('white').checked) {
     svg.append("path")
       .datum(white)
       .attr("fill", "none")
       .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
+      .attr("stroke-width", 5)
       .attr("d", d3.line()
         .x(function(d) { return x(d.Year) })
         .y(function(d) { return y(d.Income)})
        )
+      .on("mouseover", function(d,i) {
+      	tooltip.style("opacity", 1)
+      	.style("left",(d3.event.pageX)+"px")
+      	.style("top", (d3.event.pageY)+"px")
+      	.html("Poverty rate is 9.0% for White Americans");
+      })
+      .on("mouseout", function() {tooltip.style("opacity", 0)})
  	 }
 
  	 if (document.getElementById('hispanic').checked) {
@@ -311,11 +333,18 @@ const data = [
       .datum(hispanic)
       .attr("fill", "none")
       .attr("stroke", "orange")
-      .attr("stroke-width", 1.5)
+      .attr("stroke-width", 5)
       .attr("d", d3.line()
         .x(function(d) { return x(d.Year) })
         .y(function(d) { return y(d.Income)})
        )
+      .on("mouseover", function(d,i) {
+      	tooltip.style("opacity", 1)
+      	.style("left",(d3.event.pageX)+"px")
+      	.style("top", (d3.event.pageY)+"px")
+      	.html("Poverty rate is 17.2% for Hispanic Americans");
+      })
+      .on("mouseout", function() {tooltip.style("opacity", 0)})
   	}
 
   	if (document.getElementById('asian').checked) {
@@ -323,11 +352,18 @@ const data = [
       .datum(asian)
       .attr("fill", "none")
       .attr("stroke", "red")
-      .attr("stroke-width", 1.5)
+      .attr("stroke-width", 5)
       .attr("d", d3.line()
         .x(function(d) { return x(d.Year) })
         .y(function(d) { return y(d.Income)})
        )
+      .on("mouseover", function(d,i) {
+      	tooltip.style("opacity", 1)
+      	.style("left",(d3.event.pageX)+"px")
+      	.style("top", (d3.event.pageY)+"px")
+      	.html("Poverty rate is 9.7% for Asian Americans");
+      })
+      .on("mouseout", function() {tooltip.style("opacity", 0)})
   	}
 
   	if (document.getElementById('black').checked) {
@@ -335,11 +371,18 @@ const data = [
       .datum(black)
       .attr("fill", "none")
       .attr("stroke", "green")
-      .attr("stroke-width", 1.5)
+      .attr("stroke-width", 5)
       .attr("d", d3.line()
         .x(function(d) { return x(d.Year) })
         .y(function(d) { return y(d.Income)})
        )
+      .on("mouseover", function(d,i) {
+      	tooltip.style("opacity", 1)
+      	.style("left",(d3.event.pageX)+"px")
+      	.style("top", (d3.event.pageY)+"px")
+      	.html("Poverty rate is 21.2% for Black Americans");
+      })
+      .on("mouseout", function() {tooltip.style("opacity", 0)})
   	}
 </script>
 
