@@ -12,378 +12,703 @@
 		border: 0px;
 	}
 </style>
+
 <body>
 <!-- svg canvas-->
   <div id="my_dataviz"></div>
-  
-<input type="checkbox" id="white" name="white" value="White" checked onChange={window.location.reload();}>
+<div id="checkboxes"> 
+<input type="checkbox" id="white" name="white" value="White" checked onChange={checkedBox()}>
 <label for="white" style="color:steelblue">White</label><br>
-<input type="checkbox" id="hispanic" name="hispanic" value="Hispanic" checked onChange={window.location.reload();}>
+<input type="checkbox" id="hispanic" name="hispanic" value="Hispanic" checked onChange={checkedBox()}>
 <label for="hispanic" style="color:orange">Hispanic</label><br>
-<input type="checkbox" id="asian" name="asian" value="Asian" checked onChange={window.location.reload();}>
+<input type="checkbox" id="asian" name="asian" value="Asian" checked onChange={checkedBox()}>
 <label for="asian" style="color:red">Asian</label><br> 
-<input type="checkbox" id="black" name="black" value="Black" checked onChange={window.location.reload();}>
+<input type="checkbox" id="black" name="black" value="Black" checked onChange={checkedBox()}>
 <label for="black" style="color:green">Black</label><br>
+</div> 
+ <label for="scene">Choose a scene:</label>
 
+<select name="scene" id="scene" onChange={changeScenes()}>
+  <option value="income" selected>Income</option>
+  <option value="education">Education</option>
+  <option value="crime">Crime</option>
+</select> 
 <div id="tooltip"></div>
 <script>
-var margin = {top: 10, right: 30, bottom: 30, left: 60},
-    width = 800 - margin.left - margin.right,
-    height = 800 - margin.top - margin.bottom;
+	var scene = document.getElementById("scene");
+	function checkedBox() {
+		var scene = document.getElementById("scene");
+		if (scene.selectedIndex != 0) {
+			document.getElementById("white").checked = true;
+			document.getElementById("hispanic").checked = true;
+			document.getElementById("asian").checked = true;
+			document.getElementById("black").checked = true;
+		}
+		window.location.reload();
+	}
 
-// append the svg object to the body of the page
-var svg = d3.select("#my_dataviz")
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
+	function changeScenes() {
+		document.getElementById("white").checked = true;
+		document.getElementById("hispanic").checked = true;
+		document.getElementById("asian").checked = true;
+		document.getElementById("black").checked = true;
+		d3.select("my_dataviz").html = "";
+		window.location.reload();
+	}
+	var tooltip = d3.select("#tooltip");
+	var margin = {top: 100, right: 30, bottom: 30, left: 60},
+	    width = 800 - margin.left - margin.right,
+	    height = 800 - margin.top - margin.bottom;
+	const educationData = [
+	  {
+	    "Race": "Asian",
+	    "Education": "Less than high school",
+	    "Percent": "10.6"
+	  },
+	  {
+	    "Race": "Asian",
+	    "Education": "High school graduate",
+	    "Percent": "20.4"
+	  },
+	  {
+	    "Race": "Asian",
+	    "Education": "Some college but no degree",
+	    "Percent": "8.2"
+	  },
+	  {
+	    "Race": "Asian",
+	    "Education": "Associate degree",
+	    "Percent": "7.0"
+	  },
+	  {
+	    "Race": "Asian",
+	    "Education": "Bachelor's degree",
+	    "Percent": "32.2"
+	  },
+	  {
+	    "Race": "Asian",
+	    "Education": "Master's degree",
+	    "Percent": "16.3"
+	  },
+	  {
+	    "Race": "Asian",
+	    "Education": "Professional degree",
+	    "Percent": "1.9"
+	  },
+	  {
+	    "Race": "Asian",
+	    "Education": "Doctoral degree",
+	    "Percent": "3.3"
+	  },
+	  {
+	    "Race": "Black",
+	    "Education": "Less than high school",
+	    "Percent": "11.4"
+	  },
+	  {
+	    "Race": "Black",
+	    "Education": "High school graduate",
+	    "Percent": "30.6"
+	  },
+	  {
+	    "Race": "Black",
+	    "Education": "Some college but no degree",
+	    "Percent": "21.0"
+	  },
+	  {
+	    "Race": "Black",
+	    "Education": "Associate degree",
+	    "Percent": "11.2"
+	  },
+	  {
+	    "Race": "Black",
+	    "Education": "Bachelor's degree",
+	    "Percent": "15.4"
+	  },
+	  {
+	    "Race": "Black",
+	    "Education": "Master's degree",
+	    "Percent": "8.3"
+	  },
+	  {
+	    "Race": "Black",
+	    "Education": "Professional degree",
+	    "Percent": "0.9"
+	  },
+	  {
+	    "Race": "Black",
+	    "Education": "Doctoral degree",
+	    "Percent": "1.1"
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Education": "Less than high school",
+	    "Percent": "28.4"
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Education": "High school graduate",
+	    "Percent": "29.2"
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Education": "Some college but no degree",
+	    "Percent": "14.9"
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Education": "Associate degree",
+	    "Percent": "9.0"
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Education": "Bachelor's degree",
+	    "Percent": "12.9"
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Education": "Master's degree",
+	    "Percent": "4.5"
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Education": "Professional degree",
+	    "Percent": "0.4"
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Education": "Doctoral degree",
+	    "Percent": "0.7"
+	  },
+	  {
+	    "Race": "White",
+	    "Education": "Less than high school",
+	    "Percent": "5.5"
+	  },
+	  {
+	    "Race": "White",
+	    "Education": "High school graduate",
+	    "Percent": "27.5"
+	  },
+	  {
+	    "Race": "White",
+	    "Education": "Some college but no degree",
+	    "Percent": "16.6"
+	  },
+	  {
+	    "Race": "White",
+	    "Education": "Associate degree",
+	    "Percent": "12.1"
+	  },
+	  {
+	    "Race": "White",
+	    "Education": "Bachelor's degree",
+	    "Percent": "23.9"
+	  },
+	  {
+	    "Race": "White",
+	    "Education": "Master's degree",
+	    "Percent": "11.4"
+	  },
+	  {
+	    "Race": "White",
+	    "Education": "Professional degree",
+	    "Percent": "1.4"
+	  },
+	  {
+	    "Race": "White",
+	    "Education": "Doctoral degree",
+	    "Percent": "1.6"
+	  }
+	]
 
-const data = [
-  {
-    "Race": "Black",
-    "Year": 2010,
-    "Income": 38433
-  },
-  {
-    "Race": "Asian",
-    "Year": 2010,
-    "Income": 49118
-  },
-  {
-    "Race": "Hispanic",
-    "Year": 2010,
-    "Income": 33530
-  },
-  {
-    "Race": "White",
-    "Year": 2010,
-    "Income": 47932
-  },
-  {
-    "Race": "Black",
-    "Year": 2011,
-    "Income": 38640
-  },
-  {
-    "Race": "Asian",
-    "Year": 2011,
-    "Income": 47153
-  },
-  {
-    "Race": "Hispanic",
-    "Year": 2011,
-    "Income": 33472
-  },
-  {
-    "Race": "White",
-    "Year": 2011,
-    "Income": 46523
-  },
-  {
-    "Race": "Black",
-    "Year": 2012,
-    "Income": 38272
-  },
-  {
-    "Race": "Asian",
-    "Year": 2012,
-    "Income": 51489
-  },
-  {
-    "Race": "Hispanic",
-    "Year": 2012,
-    "Income": 32104
-  },
-  {
-    "Race": "White",
-    "Year": 2012,
-    "Income": 46209
-  },
-  {
-    "Race": "Black",
-    "Year": 2013,
-    "Income": 37941
-  },
-  {
-    "Race": "Asian",
-    "Year": 2013,
-    "Income": 47119
-  },
-  {
-    "Race": "Hispanic",
-    "Year": 2013,
-    "Income": 33622
-  },
-  {
-    "Race": "White",
-    "Year": 2013,
-    "Income": 46076
-  },
-  {
-    "Race": "Black",
-    "Year": 2013,
-    "Income": 36121
-  },
-  {
-    "Race": "Asian",
-    "Year": 2013,
-    "Income": 50463
-  },
-  {
-    "Race": "Hispanic",
-    "Year": 2013,
-    "Income": 34128
-  },
-  {
-    "Race": "White",
-    "Year": 2013,
-    "Income": 45895
-  },
-  {
-    "Race": "Black",
-    "Year": 2014,
-    "Income": 36700
-  },
-  {
-    "Race": "Asian",
-    "Year": 2014,
-    "Income": 50711
-  },
-  {
-    "Race": "Hispanic",
-    "Year": 2014,
-    "Income": 33154
-  },
-  {
-    "Race": "White",
-    "Year": 2014,
-    "Income": 45772
-  },
-  {
-    "Race": "Black",
-    "Year": 2015,
-    "Income": 39555
-  },
-  {
-    "Race": "Asian",
-    "Year": 2015,
-    "Income": 52958
-  },
-  {
-    "Race": "Hispanic",
-    "Year": 2015,
-    "Income": 33989
-  },
-  {
-    "Race": "White",
-    "Year": 2015,
-    "Income": 47050
-  },
-  {
-    "Race": "Black",
-    "Year": 2016,
-    "Income": 39077
-  },
-  {
-    "Race": "Asian",
-    "Year": 2016,
-    "Income": 54597
-  },
-  {
-    "Race": "Hispanic",
-    "Year": 2016,
-    "Income": 34002
-  },
-  {
-    "Race": "White",
-    "Year": 2016,
-    "Income": 49339
-  },
-  {
-    "Race": "Black",
-    "Year": 2017,
-    "Income": 39075
-  },
-  {
-    "Race": "Asian",
-    "Year": 2017,
-    "Income": 54873
-  },
-  {
-    "Race": "Hispanic",
-    "Year": 2017,
-    "Income": 33953
-  },
-  {
-    "Race": "White",
-    "Year": 2017,
-    "Income": 50143
-  },
-  {
-    "Race": "Black",
-    "Year": 2018,
-    "Income": 39209
-  },
-  {
-    "Race": "Asian",
-    "Year": 2018,
-    "Income": 57282
-  },
-  {
-    "Race": "Hispanic",
-    "Year": 2018,
-    "Income": 34574
-  },
-  {
-    "Race": "White",
-    "Year": 2018,
-    "Income": 49882
-  },
-  {
-    "Race": "Black",
-    "Year": 2019,
-    "Income": 41611
-  },
-  {
-    "Race": "Asian",
-    "Year": 2019,
-    "Income": 57516
-  },
-  {
-    "Race": "Hispanic",
-    "Year": 2019,
-    "Income": 36561
-  },
-  {
-    "Race": "White",
-    "Year": 2019,
-    "Income": 51964
-  },
-  {
-    "Race": "Black",
-    "Year": 2020,
-    "Income": 43209
-  },
-  {
-    "Race": "Asian",
-    "Year": 2020,
-    "Income": 68442
-  },
-  {
-    "Race": "Hispanic",
-    "Year": 2020,
-    "Income": 38718
-  },
-  {
-    "Race": "White",
-    "Year": 2020,
-    "Income": 53731
-  }
-];
+	const incomeData = [
+	  {
+	    "Race": "Black",
+	    "Year": 2010,
+	    "Income": 38433
+	  },
+	  {
+	    "Race": "Asian",
+	    "Year": 2010,
+	    "Income": 49118
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Year": 2010,
+	    "Income": 33530
+	  },
+	  {
+	    "Race": "White",
+	    "Year": 2010,
+	    "Income": 47932
+	  },
+	  {
+	    "Race": "Black",
+	    "Year": 2011,
+	    "Income": 38640
+	  },
+	  {
+	    "Race": "Asian",
+	    "Year": 2011,
+	    "Income": 47153
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Year": 2011,
+	    "Income": 33472
+	  },
+	  {
+	    "Race": "White",
+	    "Year": 2011,
+	    "Income": 46523
+	  },
+	  {
+	    "Race": "Black",
+	    "Year": 2012,
+	    "Income": 38272
+	  },
+	  {
+	    "Race": "Asian",
+	    "Year": 2012,
+	    "Income": 51489
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Year": 2012,
+	    "Income": 32104
+	  },
+	  {
+	    "Race": "White",
+	    "Year": 2012,
+	    "Income": 46209
+	  },
+	  {
+	    "Race": "Black",
+	    "Year": 2013,
+	    "Income": 37941
+	  },
+	  {
+	    "Race": "Asian",
+	    "Year": 2013,
+	    "Income": 47119
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Year": 2013,
+	    "Income": 33622
+	  },
+	  {
+	    "Race": "White",
+	    "Year": 2013,
+	    "Income": 46076
+	  },
+	  {
+	    "Race": "Black",
+	    "Year": 2013,
+	    "Income": 36121
+	  },
+	  {
+	    "Race": "Asian",
+	    "Year": 2013,
+	    "Income": 50463
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Year": 2013,
+	    "Income": 34128
+	  },
+	  {
+	    "Race": "White",
+	    "Year": 2013,
+	    "Income": 45895
+	  },
+	  {
+	    "Race": "Black",
+	    "Year": 2014,
+	    "Income": 36700
+	  },
+	  {
+	    "Race": "Asian",
+	    "Year": 2014,
+	    "Income": 50711
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Year": 2014,
+	    "Income": 33154
+	  },
+	  {
+	    "Race": "White",
+	    "Year": 2014,
+	    "Income": 45772
+	  },
+	  {
+	    "Race": "Black",
+	    "Year": 2015,
+	    "Income": 39555
+	  },
+	  {
+	    "Race": "Asian",
+	    "Year": 2015,
+	    "Income": 52958
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Year": 2015,
+	    "Income": 33989
+	  },
+	  {
+	    "Race": "White",
+	    "Year": 2015,
+	    "Income": 47050
+	  },
+	  {
+	    "Race": "Black",
+	    "Year": 2016,
+	    "Income": 39077
+	  },
+	  {
+	    "Race": "Asian",
+	    "Year": 2016,
+	    "Income": 54597
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Year": 2016,
+	    "Income": 34002
+	  },
+	  {
+	    "Race": "White",
+	    "Year": 2016,
+	    "Income": 49339
+	  },
+	  {
+	    "Race": "Black",
+	    "Year": 2017,
+	    "Income": 39075
+	  },
+	  {
+	    "Race": "Asian",
+	    "Year": 2017,
+	    "Income": 54873
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Year": 2017,
+	    "Income": 33953
+	  },
+	  {
+	    "Race": "White",
+	    "Year": 2017,
+	    "Income": 50143
+	  },
+	  {
+	    "Race": "Black",
+	    "Year": 2018,
+	    "Income": 39209
+	  },
+	  {
+	    "Race": "Asian",
+	    "Year": 2018,
+	    "Income": 57282
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Year": 2018,
+	    "Income": 34574
+	  },
+	  {
+	    "Race": "White",
+	    "Year": 2018,
+	    "Income": 49882
+	  },
+	  {
+	    "Race": "Black",
+	    "Year": 2019,
+	    "Income": 41611
+	  },
+	  {
+	    "Race": "Asian",
+	    "Year": 2019,
+	    "Income": 57516
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Year": 2019,
+	    "Income": 36561
+	  },
+	  {
+	    "Race": "White",
+	    "Year": 2019,
+	    "Income": 51964
+	  },
+	  {
+	    "Race": "Black",
+	    "Year": 2020,
+	    "Income": 43209
+	  },
+	  {
+	    "Race": "Asian",
+	    "Year": 2020,
+	    "Income": 68442
+	  },
+	  {
+	    "Race": "Hispanic",
+	    "Year": 2020,
+	    "Income": 38718
+	  },
+	  {
+	    "Race": "White",
+	    "Year": 2020,
+	    "Income": 53731
+	  }
+	];
 	let parseDate = d3.timeParse("%Y")
-	data.forEach(function (d) {
+	incomeData.forEach(function (d) {
   		d.Year = parseDate(d.Year);
 	});
-    // Add X axis --> it is a date format
-    var x = d3.scaleTime()
-      .domain(d3.extent(data, function(d) { return d.Year; }))
-      .range([ 0, width ]);
-    svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+	var scene = document.getElementById("scene");
+	console.log(scene.selectedIndex);
+	if (scene.selectedIndex == 1) {
+		const bachelorsData = educationData.filter(function(d) {return d.Education === "Bachelor's degree"})
+		var svg = d3.select("#my_dataviz")
+		  .append("svg")
+		    .attr("width", width + margin.left + margin.right)
+		    .attr("height", height + margin.top + margin.bottom)
+		  .append("g")
+		    .attr("transform",
+		          "translate(" + margin.left + "," + margin.top + ")");
 
-    // Add Y axis
-    var y = d3.scaleLinear()
-      .domain([0, d3.max(data, function(d) { return +d.Income; })])
-      .range([ height, 0 ]);
-    svg.append("g")
-      .call(d3.axisLeft(y));
 
-    
-    const white = data.filter(function(d) {return d.Race === "White"})
-    const hispanic = data.filter(function(d) {return d.Race === "Hispanic"})
-    const asian = data.filter(function(d) {return d.Race === "Asian"})
-    const black = data.filter(function(d) {return d.Race === "Black"})
+		 svg.append("text")      // text label for the x axis
+	        .attr("x", width / 2 )
+	        .attr("y",  height + 30 )
+	        .style("text-anchor", "middle")
+	        .text("Race");
 
-    var tooltip = d3.select("#tooltip");
-    // Add the line
-    if (document.getElementById('white').checked) {
-    svg.append("path")
-      .datum(white)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 5)
-      .attr("d", d3.line()
-        .x(function(d) { return x(d.Year) })
-        .y(function(d) { return y(d.Income)})
-       )
-      .on("mouseover", function(d,i) {
-      	tooltip.style("opacity", 1)
-      	.style("left",(d3.event.pageX)+"px")
-      	.style("top", (d3.event.pageY)+"px")
-      	.html("Poverty rate is 9.0% for White Americans");
-      })
-      .on("mouseout", function() {tooltip.style("opacity", 0)})
- 	 }
+	    svg.append("text")      // text label for the y axis
+	        .attr("transform", "rotate(-90)")
+	        .attr("x", -(height / 2) )
+	        .attr("y",  -45 )
+	        .style("text-anchor", "middle")
+	        .text("Bachelors Degree %");
 
- 	 if (document.getElementById('hispanic').checked) {
-    svg.append("path")
-      .datum(hispanic)
-      .attr("fill", "none")
-      .attr("stroke", "orange")
-      .attr("stroke-width", 5)
-      .attr("d", d3.line()
-        .x(function(d) { return x(d.Year) })
-        .y(function(d) { return y(d.Income)})
-       )
-      .on("mouseover", function(d,i) {
-      	tooltip.style("opacity", 1)
-      	.style("left",(d3.event.pageX)+"px")
-      	.style("top", (d3.event.pageY)+"px")
-      	.html("Poverty rate is 17.2% for Hispanic Americans");
-      })
-      .on("mouseout", function() {tooltip.style("opacity", 0)})
-  	}
+	    var x = d3.scaleBand().domain(["Asian", "White" , "Hispanic", "Black"]).range([0,width])
+		var y = d3.scaleLinear().domain([0, d3.max(bachelorsData, function(d) { return +d.Percent; })]).range([height,0])
 
-  	if (document.getElementById('asian').checked) {
-     svg.append("path")
-      .datum(asian)
-      .attr("fill", "none")
-      .attr("stroke", "red")
-      .attr("stroke-width", 5)
-      .attr("d", d3.line()
-        .x(function(d) { return x(d.Year) })
-        .y(function(d) { return y(d.Income)})
-       )
-      .on("mouseover", function(d,i) {
-      	tooltip.style("opacity", 1)
-      	.style("left",(d3.event.pageX)+"px")
-      	.style("top", (d3.event.pageY)+"px")
-      	.html("Poverty rate is 9.7% for Asian Americans");
-      })
-      .on("mouseout", function() {tooltip.style("opacity", 0)})
-  	}
+		svg.append("g")
+	      .call(d3.axisLeft(y));
 
-  	if (document.getElementById('black').checked) {
-      svg.append("path")
-      .datum(black)
-      .attr("fill", "none")
-      .attr("stroke", "green")
-      .attr("stroke-width", 5)
-      .attr("d", d3.line()
-        .x(function(d) { return x(d.Year) })
-        .y(function(d) { return y(d.Income)})
-       )
-      .on("mouseover", function(d,i) {
-      	tooltip.style("opacity", 1)
-      	.style("left",(d3.event.pageX)+"px")
-      	.style("top", (d3.event.pageY)+"px")
-      	.html("Poverty rate is 21.2% for Black Americans");
-      })
-      .on("mouseout", function() {tooltip.style("opacity", 0)})
-  	}
+		svg.append("g")
+	      .attr("transform", "translate(0," + height + ")")
+	      .call(d3.axisBottom(x));
+
+	    svg.append("text")     
+	        .attr("x", width * 0.25 )
+	        .attr("y",  0 )
+	        .attr("font-size", "0.75em")
+	        .style("text-anchor", "right")
+	        .text("Black and Hispanic Americans have lower rates of higher education (hover bars to see details)");
+
+		svg.append("rect")
+			.attr("x",  width / 4 * 0.5 - 20)
+			.attr("y", height - (height / 32.2 * 32.2))
+			.attr("width", 40)
+			.attr("height", height / 32.2 * 32.2)
+			.attr("fill", "red")
+			.on("mouseover", function(d,i) {
+		      	tooltip.style("opacity", 1)
+		      	.style("left",(d3.event.pageX)+"px")
+		      	.style("top", (d3.event.pageY)+"px")
+		      	.style("width", "300px")
+		      	.style("height", "200px")
+		      	.style("background-color", "white")
+		      	.html("Less than high school 10.6%</br>High school graduate 20.4%</br>Some college but no degree 8.2%</br>Associate degree 7.0%</br>Bachelor's degree 32.2%</br>Master's degree 16.3%</br>Professional degree 1.9%");
+		      })
+			.on("mouseout", function() {tooltip.style("opacity", 0)})
+
+		svg.append("rect")
+			.attr("x",  width / 4 * 1.5 - 20)
+			.attr("y", height - (height / 32.2 * 23.9))
+			.attr("width", 40)
+			.attr("height", height / 32.2 * 23.9)
+			.attr("fill", "steelblue")
+			.on("mouseover", function(d,i) {
+		      	tooltip.style("opacity", 1)
+		      	.style("left",(d3.event.pageX)+"px")
+		      	.style("top", (d3.event.pageY)+"px")
+		      	.style("width", "300px")
+		      	.style("height", "200px")
+		      	.style("background-color", "white")
+		      	.html("Less than high school 5.5%</br>High school graduate 27.5%</br>Some college but no degree 16.6%</br>Associate degree 12.1%</br>Bachelor's degree 23.9%</br>Master's degree 11.4%</br>Professional degree 1.4%");
+		      })
+			.on("mouseout", function() {tooltip.style("opacity", 0)})
+
+		svg.append("rect")
+			.attr("x",  width / 4 * 2.5 - 20)
+			.attr("y", height - (height / 32.2 * 12.9))
+			.attr("width", 40)
+			.attr("height", height / 32.2 * 12.9)
+			.attr("fill", "orange")
+			.on("mouseover", function(d,i) {
+		      	tooltip.style("opacity", 1)
+		      	.style("left",(d3.event.pageX)+"px")
+		      	.style("top", (d3.event.pageY)+"px")
+		      	.style("width", "300px")
+		      	.style("height", "200px")
+		      	.style("background-color", "white")
+		      	.html("Less than high school 28.4%</br>High school graduate 29.2%</br>Some college but no degree 14.9%</br>Associate degree 9.0%</br>Bachelor's degree 12.9%</br>Master's degree 4.5%</br>Professional degree 0.4%");
+		      })
+			.on("mouseout", function() {tooltip.style("opacity", 0)})
+
+		svg.append("rect")
+			.attr("x",  width / 4 * 3.5 - 20)
+			.attr("y", height - (height / 32.2 * 15.4))
+			.attr("width", 40)
+			.attr("height", height / 32.2 * 15.4)
+			.attr("fill", "green")
+			.on("mouseover", function(d,i) {
+		      	tooltip.style("opacity", 1)
+		      	.style("left",(d3.event.pageX)+"px")
+		      	.style("top", (d3.event.pageY)+"px")
+		      	.style("width", "300px")
+		      	.style("height", "200px")
+		      	.style("background-color", "white")
+		      	.html("Less than high school 11.4%</br>High school graduate 30.6%</br>Some college but no degree 21.0%</br>Associate degree 11.2%</br>Bachelor's degree 15.4%</br>Master's degree 8.3%</br>Professional degree 0.9%");
+		      })
+			.on("mouseout", function() {tooltip.style("opacity", 0)})
+
+		
+	}
+	if (scene.selectedIndex == 0) {
+		// append the svg object to the body of the page
+		var svg = d3.select("#my_dataviz")
+		  .append("svg")
+		    .attr("width", width + margin.left + margin.right)
+		    .attr("height", height + margin.top + margin.bottom)
+		  .append("g")
+		    .attr("transform",
+		          "translate(" + margin.left + "," + margin.top + ")");
+
+		svg.append("text")      // text label for the x axis
+	        .attr("x", width / 2 )
+	        .attr("y",  height + 30 )
+	        .style("text-anchor", "middle")
+	        .text("Year");
+
+	    svg.append("text")      // text label for the y axis
+	        .attr("transform", "rotate(-90)")
+	        .attr("x", -(height / 2) )
+	        .attr("y",  -45 )
+	        .style("text-anchor", "middle")
+	        .text("Income in USD");
+
+	    svg.append("text")      // text label for the x axis
+	        .attr("x", width / 2 )
+	        .attr("y",  height * 0.75 )
+	        .attr("font-size", "0.75em")
+	        .style("text-anchor", "middle")
+	        .text("Black and Hispanic Americans are much more likely to suffer from poverty (hover over lines to see poverty rates)");
+	    // Add X axis --> it is a date format
+	    var x = d3.scaleTime()
+	      .domain(d3.extent(incomeData, function(d) { return d.Year; }))
+	      .range([ 0, width ]);
+	    svg.append("g")
+	      .attr("transform", "translate(0," + height + ")")
+	      .call(d3.axisBottom(x));
+
+	    // Add Y axis
+	    var y = d3.scaleLinear()
+	      .domain([0, d3.max(incomeData, function(d) { return +d.Income; })])
+	      .range([ height, 0 ]);
+	    svg.append("g")
+	      .call(d3.axisLeft(y));
+
+	    
+	    const white = incomeData.filter(function(d) {return d.Race === "White"})
+	    const hispanic = incomeData.filter(function(d) {return d.Race === "Hispanic"})
+	    const asian = incomeData.filter(function(d) {return d.Race === "Asian"})
+	    const black = incomeData.filter(function(d) {return d.Race === "Black"})
+
+	    
+	    // Add the lines
+    	if (document.getElementById('white').checked) {
+		    svg.append("path")
+		      .datum(white)
+		      .attr("fill", "none")
+		      .attr("stroke", "steelblue")
+		      .attr("stroke-width", 10)
+		      .attr("d", d3.line()
+		        .x(function(d) { return x(d.Year) })
+		        .y(function(d) { return y(d.Income)})
+		       )
+		      .on("mouseover", function(d,i) {
+		      	tooltip.style("opacity", 1)
+		      	.style("left",(d3.event.pageX)+"px")
+		      	.style("top", (d3.event.pageY)+"px")
+		      	.html("Poverty rate is 9.0% for White Americans");
+		      })
+		      .on("mouseout", function() {tooltip.style("opacity", 0)})
+	 	 }
+
+	 	 if (document.getElementById('hispanic').checked) {
+		    svg.append("path")
+		      .datum(hispanic)
+		      .attr("fill", "none")
+		      .attr("stroke", "orange")
+		      .attr("stroke-width", 10)
+		      .attr("d", d3.line()
+		        .x(function(d) { return x(d.Year) })
+		        .y(function(d) { return y(d.Income)})
+		       )
+		      .on("mouseover", function(d,i) {
+		      	tooltip.style("opacity", 1)
+		      	.style("left",(d3.event.pageX)+"px")
+		      	.style("top", (d3.event.pageY)+"px")
+		      	.html("Poverty rate is 17.2% for Hispanic Americans");
+		      })
+		      .on("mouseout", function() {tooltip.style("opacity", 0)})
+	  	}
+
+	  	if (document.getElementById('asian').checked) {
+		     svg.append("path")
+		      .datum(asian)
+		      .attr("fill", "none")
+		      .attr("stroke", "red")
+		      .attr("stroke-width", 10)
+		      .attr("d", d3.line()
+		        .x(function(d) { return x(d.Year) })
+		        .y(function(d) { return y(d.Income)})
+		       )
+		      .on("mouseover", function(d,i) {
+		      	tooltip.style("opacity", 1)
+		      	.style("left",(d3.event.pageX)+"px")
+		      	.style("top", (d3.event.pageY)+"px")
+		      	.html("Poverty rate is 9.7% for Asian Americans");
+		      })
+		      .on("mouseout", function() {tooltip.style("opacity", 0)})
+	  	}
+
+	  	if (document.getElementById('black').checked) {
+		      svg.append("path")
+		      .datum(black)
+		      .attr("fill", "none")
+		      .attr("stroke", "green")
+		      .attr("stroke-width", 10)
+		      .attr("d", d3.line()
+		        .x(function(d) { return x(d.Year) })
+		        .y(function(d) { return y(d.Income)})
+		       )
+		      .on("mouseover", function(d,i) {
+		      	tooltip.style("opacity", 1)
+		      	.style("left",(d3.event.pageX)+"px")
+		      	.style("top", (d3.event.pageY)+"px")
+		      	.html("Poverty rate is 21.2% for Black Americans");
+		      })
+		      .on("mouseout", function() {tooltip.style("opacity", 0)})
+	  	}
+	  }
 </script>
 
 </body>
