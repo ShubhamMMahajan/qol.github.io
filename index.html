@@ -11,10 +11,14 @@
 		background: white;
 		border: 0px;
 	}
+	h1 {
+		text-align: center;
+	}
 </style>
 
 <body>
 <!-- svg canvas-->
+<h1>Quality of Life</h1>
   <div id="my_dataviz"></div>
 <div id="checkboxes"> 
 <input type="checkbox" id="white" name="white" value="White" checked onChange={checkedBox()}>
@@ -34,6 +38,16 @@
   <option value="crime">Arrests</option>
 </select> 
 <div id="tooltip"></div>
+<div>
+	</br></br></br>
+The following scenes above depict the quality of life across various races in the USA. </br>
+Each color depicts a specific race and is consistent throughout the scenes. </br>
+The checkboxes allow you to toggle what race to show in each scene. </br>
+The education scene will have all the toggles on since it does not make sense to remove a bar from a bar chart. </br>
+The arrest scene will have the hispanic toggle always off since we do not have data for that.</br>
+Everytime you change scenes the races will be toggled appropriately by default. </br>
+Hovering over each line/bar will provide additional data.</br>
+</div>
 <script>
 	var scene = document.getElementById("scene");
 	function checkedBox() {
@@ -52,7 +66,7 @@
 
 	function changeScenes() {
 		var scene = document.getElementById("scene");
-		
+
 		document.getElementById("white").checked = true;
 		if (scene.selectedIndex == 2) {
 			document.getElementById("hispanic").checked = false;
@@ -65,7 +79,7 @@
 		window.location.reload();
 	}
 	var tooltip = d3.select("#tooltip");
-	var margin = {top: 100, right: 30, bottom: 30, left: 60},
+	var margin = {top: 10, right: 30, bottom: 30, left: 60},
 	    width = 800 - margin.left - margin.right,
 	    height = 800 - margin.top - margin.bottom;
 	const educationData = [
