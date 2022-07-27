@@ -31,25 +31,34 @@
 <select name="scene" id="scene" onChange={changeScenes()}>
   <option value="income" selected>Income</option>
   <option value="education">Education</option>
-  <option value="crime">Crime</option>
+  <option value="crime">Arrests</option>
 </select> 
 <div id="tooltip"></div>
 <script>
 	var scene = document.getElementById("scene");
 	function checkedBox() {
 		var scene = document.getElementById("scene");
-		if (scene.selectedIndex != 0) {
+		if (scene.selectedIndex == 1) {
 			document.getElementById("white").checked = true;
 			document.getElementById("hispanic").checked = true;
 			document.getElementById("asian").checked = true;
 			document.getElementById("black").checked = true;
 		}
+		if (scene.selectedIndex == 2) {
+			document.getElementById("hispanic").checked = false;
+		}
 		window.location.reload();
 	}
 
 	function changeScenes() {
+		var scene = document.getElementById("scene");
+		
 		document.getElementById("white").checked = true;
-		document.getElementById("hispanic").checked = true;
+		if (scene.selectedIndex == 2) {
+			document.getElementById("hispanic").checked = false;
+		} else {
+			document.getElementById("hispanic").checked = true;
+		}
 		document.getElementById("asian").checked = true;
 		document.getElementById("black").checked = true;
 		d3.select("my_dataviz").html = "";
@@ -464,12 +473,337 @@
 	    "Income": 53731
 	  }
 	];
+
+		const crimeData = [
+		{
+			"Year": 2010,
+			"Race": "White",
+			"White": "9,121,270",
+			"Total Pop": "235,000,000",
+			"Percent": 3.881
+		},
+		{
+			"Year": 2011,
+			"Race": "White",
+			"White": "8,595,810",
+			"Total Pop": "235,000,000",
+			"Percent": 3.658
+		},
+		{
+			"Year": 2012,
+			"Race": "White",
+			"White": "8,417,780",
+			"Total Pop": "235,000,000",
+			"Percent": 3.582
+		},
+		{
+			"Year": 2013,
+			"Race": "White",
+			"White": "7,809,270",
+			"Total Pop": "235,000,000",
+			"Percent": 3.323
+		},
+		{
+			"Year": 2014,
+			"Race": "White",
+			"White": "7,771,220",
+			"Total Pop": "235,000,000",
+			"Percent": 3.307
+		},
+		{
+			"Year": 2015,
+			"Race": "White",
+			"White": "7,531,830",
+			"Total Pop": "235,000,000",
+			"Percent": 3.205
+		},
+		{
+			"Year": 2016,
+			"Race": "White",
+			"White": "7,418,700",
+			"Total Pop": "235,000,000",
+			"Percent": 3.157
+		},
+		{
+			"Year": 2017,
+			"Race": "White",
+			"White": "7,277,670",
+			"Total Pop": "235,000,000",
+			"Percent": 3.097
+		},
+		{
+			"Year": 2018,
+			"Race": "White",
+			"White": "7,115,940",
+			"Total Pop": "235,000,000",
+			"Percent": 3.028
+		},
+		{
+			"Year": 2019,
+			"Race": "White",
+			"White": "7,014,550",
+			"Total Pop": "235,000,000",
+			"Percent": 2.985
+		},
+		{
+			"Year": 2010,
+			"Race": "Black",
+			"White": "3,655,210",
+			"Total Pop": "41,100,000",
+			"Percent": 8.893
+		},
+		{
+			"Year": 2011,
+			"Race": "Black",
+			"White": "3,474,350",
+			"Total Pop": "41,100,000",
+			"Percent": 8.453
+		},
+		{
+			"Year": 2012,
+			"Race": "Black",
+			"White": "3,420,690",
+			"Total Pop": "41,100,000",
+			"Percent": 8.323
+		},
+		{
+			"Year": 2013,
+			"Race": "Black",
+			"White": "3,173,490",
+			"Total Pop": "41,100,000",
+			"Percent": 7.721
+		},
+		{
+			"Year": 2014,
+			"Race": "Black",
+			"White": "3,114,810",
+			"Total Pop": "41,100,000",
+			"Percent": 7.579
+		},
+		{
+			"Year": 2015,
+			"Race": "Black",
+			"White": "2,875,140",
+			"Total Pop": "41,100,000",
+			"Percent": 6.995
+		},
+		{
+			"Year": 2016,
+			"Race": "Black",
+			"White": "2,863,810",
+			"Total Pop": "41,100,000",
+			"Percent": 6.968
+		},
+		{
+			"Year": 2017,
+			"Race": "Black",
+			"White": "2,870,440",
+			"Total Pop": "41,100,000",
+			"Percent": 6.984
+		},
+		{
+			"Year": 2018,
+			"Race": "Black",
+			"White": "2,826,460",
+			"Total Pop": "41,100,000",
+			"Percent": 6.877
+		},
+		{
+			"Year": 2019,
+			"Race": "Black",
+			"White": "2,667,010",
+			"Total Pop": "41,100,000",
+			"Percent": 6.489
+		},
+		{
+			"Year": 2010,
+			"Race": "Asian",
+			"White": "158,360",
+			"Total Pop": "19,900,000",
+			"Percent": 0.796
+		},
+		{
+			"Year": 2011,
+			"Race": "Asian",
+			"White": "150,920",
+			"Total Pop": "19,900,000",
+			"Percent": 0.758
+		},
+		{
+			"Year": 2012,
+			"Race": "Asian",
+			"White": "181,390",
+			"Total Pop": "19,900,000",
+			"Percent": 0.912
+		},
+		{
+			"Year": 2013,
+			"Race": "Asian",
+			"White": "142,420",
+			"Total Pop": "19,900,000",
+			"Percent": 0.716
+		},
+		{
+			"Year": 2014,
+			"Race": "Asian",
+			"White": "146,100",
+			"Total Pop": "19,900,000",
+			"Percent": 0.734
+		},
+		{
+			"Year": 2015,
+			"Race": "Asian",
+			"White": "162,880",
+			"Total Pop": "19,900,000",
+			"Percent": 0.818
+		},
+		{
+			"Year": 2016,
+			"Race": "Asian",
+			"White": "163,210",
+			"Total Pop": "19,900,000",
+			"Percent": 0.82
+		},
+		{
+			"Year": 2017,
+			"Race": "Asian",
+			"White": "152,800",
+			"Total Pop": "19,900,000",
+			"Percent": 0.768
+		},
+		{
+			"Year": 2018,
+			"Race": "Asian",
+			"White": "149,150",
+			"Total Pop": "19,900,000",
+			"Percent": 0.749
+		},
+		{
+			"Year": 2019,
+			"Race": "Asian",
+			"White": "159,450",
+			"Total Pop": "19,900,000",
+			"Percent": 0.801
+		}
+	];
+
 	let parseDate = d3.timeParse("%Y")
 	incomeData.forEach(function (d) {
   		d.Year = parseDate(d.Year);
 	});
+
+	crimeData.forEach(function(d) {
+		d.Year = parseDate(d.Year);
+	});
 	var scene = document.getElementById("scene");
 	console.log(scene.selectedIndex);
+	if (scene.selectedIndex == 2) {
+		var svg = d3.select("#my_dataviz")
+		  .append("svg")
+		    .attr("width", width + margin.left + margin.right)
+		    .attr("height", height + margin.top + margin.bottom)
+		  .append("g")
+		    .attr("transform",
+		          "translate(" + margin.left + "," + margin.top + ")");
+
+		svg.append("text")      // text label for the x axis
+	        .attr("x", width / 2 )
+	        .attr("y",  height + 30 )
+	        .style("text-anchor", "middle")
+	        .text("Year");
+
+	    svg.append("text")      // text label for the y axis
+	        .attr("transform", "rotate(-90)")
+	        .attr("x", -(height / 2) )
+	        .attr("y",  -45 )
+	        .style("text-anchor", "middle")
+	        .text("Arrest %");
+
+	    svg.append("text")      // text label for the x axis
+	        .attr("x", width / 2 )
+	        .attr("y",  height * 0.75 )
+	        .attr("font-size", "0.75em")
+	        .style("text-anchor", "middle")
+	        .text("Shows what percentage of population arrested by year");
+	    // Add X axis --> it is a date format
+	    var x = d3.scaleTime()
+	      .domain(d3.extent(crimeData, function(d) { return d.Year; }))
+	      .range([ 0, width ]);
+	    svg.append("g")
+	      .attr("transform", "translate(0," + height + ")")
+	      .call(d3.axisBottom(x));
+
+	    // Add Y axis
+	    var y = d3.scaleLinear()
+	      .domain([0, d3.max(crimeData, function(d) { return +d.Percent; })])
+	      .range([ height, 0 ]);
+	    svg.append("g")
+	      .call(d3.axisLeft(y));
+
+	    
+	    const white = crimeData.filter(function(d) {return d.Race === "White"})
+	    const asian = crimeData.filter(function(d) {return d.Race === "Asian"})
+	    const black = crimeData.filter(function(d) {return d.Race === "Black"})
+
+	    
+	    // Add the lines
+    	if (document.getElementById('white').checked) {
+		    svg.append("path")
+		      .datum(white)
+		      .attr("fill", "none")
+		      .attr("stroke", "steelblue")
+		      .attr("stroke-width", 10)
+		      .attr("d", d3.line()
+		        .x(function(d) { return x(d.Year) })
+		        .y(function(d) { return y(d.Percent)})
+		       )
+		      .on("mouseover", function(d,i) {
+		      	tooltip.style("opacity", 1)
+		      	.style("left",(d3.event.pageX)+"px")
+		      	.style("top", (d3.event.pageY)+"px")
+		      	.html("78,074,040 arrests in the decade");
+		      })
+		      .on("mouseout", function() {tooltip.style("opacity", 0)})
+	 	 }
+
+	  	if (document.getElementById('asian').checked) {
+		     svg.append("path")
+		      .datum(asian)
+		      .attr("fill", "none")
+		      .attr("stroke", "red")
+		      .attr("stroke-width", 10)
+		      .attr("d", d3.line()
+		        .x(function(d) { return x(d.Year) })
+		        .y(function(d) { return y(d.Percent)})
+		       )
+		      .on("mouseover", function(d,i) {
+		      	tooltip.style("opacity", 1)
+		      	.style("left",(d3.event.pageX)+"px")
+		      	.style("top", (d3.event.pageY)+"px")
+		      	.html("1,566,680 arrests in the decade");
+		      })
+		      .on("mouseout", function() {tooltip.style("opacity", 0)})
+	  	}
+
+	  	if (document.getElementById('black').checked) {
+		      svg.append("path")
+		      .datum(black)
+		      .attr("fill", "none")
+		      .attr("stroke", "green")
+		      .attr("stroke-width", 10)
+		      .attr("d", d3.line()
+		        .x(function(d) { return x(d.Year) })
+		        .y(function(d) { return y(d.Percent)})
+		       )
+		      .on("mouseover", function(d,i) {
+		      	tooltip.style("opacity", 1)
+		      	.style("left",(d3.event.pageX)+"px")
+		      	.style("top", (d3.event.pageY)+"px")
+		      	.html("30,941,410 arrests in the decade");
+		      })
+		      .on("mouseout", function() {tooltip.style("opacity", 0)})
+	  	}
+	}
 	if (scene.selectedIndex == 1) {
 		const bachelorsData = educationData.filter(function(d) {return d.Education === "Bachelor's degree"})
 		var svg = d3.select("#my_dataviz")
